@@ -6,7 +6,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Repository
@@ -23,12 +22,6 @@ public class RolesDAOImp implements RolesDAO {
     public Role getByID(int id) {
         Session session = this.sessionFactory.getCurrentSession();
         List<Role> roles = (List<Role>) session.createQuery("from Role").list();
-        Role role=null;
-        for (Role foundRole : roles) {
-            if(foundRole.getId()==id){
-                role=foundRole;
-            }
-        }
-        return role;
+        return roles.stream().findFirst().orElse(null);
     }
 }

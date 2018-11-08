@@ -24,10 +24,9 @@
         margin: auto;
     }
 </style>
-
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light nav-pills">
         <a class="navbar-brand" href="/main">Main</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -37,8 +36,11 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/cars">Cars<span class="sr-only">(current)</span></a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="#/agreement">Agreement<span class="sr-only">(current)</span></a>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Rental</a>
+                    <a class="nav-link" href="/profile/${pageContext.request.userPrincipal.name}">Profile</a>
                 </li>
                 <security:authorize access="hasRole('ROLE_ADMIN')">
                     <li class="nav-item">

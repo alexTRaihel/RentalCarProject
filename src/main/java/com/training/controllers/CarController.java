@@ -2,8 +2,13 @@ package com.training.controllers;
 
 import com.training.model.domain.Car;
 import com.training.model.domain.Order;
+import com.training.model.domain.User;
 import com.training.model.services.interfaces.CarService;
+import com.training.model.services.interfaces.OrderService;
+import com.training.model.services.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,6 +27,12 @@ public class CarController {
     @Autowired
     private CarService carService;
 
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private UserService userService;
+
     @RequestMapping(value = "/cars", method = RequestMethod.GET)
     public String carsPage(Model model) {
         List<Car> cars = carService.listCars();
@@ -29,38 +41,58 @@ public class CarController {
     }
 
     @RequestMapping(value = "/rent/{id}", method = RequestMethod.GET)
-    public String rentalCar(@PathVariable("id") int id, Model model) {
+    public ModelAndView rentalCar(@PathVariable("id") int id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //пересмотреть этот код
+        User user = userService.getUserByUsername(authentication.getName());
+
         Car car = carService.getCarById(id);
-        Order order = new Order();
-        model.addAttribute("order", new Order());
-        model.addAttribute("car", car);
-        return "order";
+        ModelAndView model = new ModelAndView();
+        model.addObject("order", new Order());
+        model.addObject("car", car);
+        model.addObject("user", user);
+        model.setViewName("formOrder");
+        return model;
     }
 
     @RequestMapping(value= "/rent/{id}", method = RequestMethod.POST)
-    public String rentalPage(@Valid @ModelAttribute("order") Order order,@ModelAttribute("car") Car car, BindingResult bindingResult){
+    public String rentalPage(@PathVariable("id") int id, @Valid @ModelAttribute("order") Order order,@ModelAttribute("car") Car car,
+                             BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return "order";
+            return "formOrder";
         }
-
-
-//        userService.addPerson(user);
-//        securityService.autoLogin(user.getUsername(), user.getPassword());
+        Authentication authentication =SecurityContextHolder.getContext().getAuthentication();
+        order.setCar(car);
+        order.setUser(userService.getUserByUsername(authentication.getName()));
+        orderService.saveOrder(order);
         return "redirect:/main";
     }
-    
-//    @RequestMapping(value="/check", method = RequestMethod.POST)
-//    public String viewLogin(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model){
-//
-//        if (bindingResult.hasErrors()){
-//            return "login";
-//        }
-//
-//        model.addAttribute("user", user);
-//
-//        return "main";
-//    }
-//
+
+    @RequestMapping(value= "/admin/orders", method = RequestMethod.GET)
+    public String orderConfirmation(Model model){
+        List<Order> list = orderService.findAllOrders();
+        model.addAttribute("listOrders", list);
+        return "listOrders";
+    }
+
+    @RequestMapping(value= "/admin/orders", method = RequestMethod.POST)
+    public String allOrders(@ModelAttribute("order") Order order, Model model){
+        List<Order> list = orderService.findAllOrders();
+        model.addAttribute("listOrders", list);
+        return "redirect:/admin/orders";
+    }
+
+    @RequestMapping(value= "/order/{id}", method = RequestMethod.GET)
+    public String order(@PathVariable("id") int id, Model model){
+        Order order = orderService.getOrdersById(id);
+        if(!(userService.checkAccess(order.getUser().getUsername()))){
+            return "redirect:/main";
+        }
+        model.addAttribute("order", order);
+            return "order";
+    }
+
+
 //    @RequestMapping(value = "/get-json-user", method = RequestMethod.GET, produces = "application/json")
 //    @ResponseBody
 //    public User getJsonUser(@RequestParam("name") String name){
@@ -74,59 +106,18 @@ public class CarController {
 //        System.out.println(user.getName());
 //        return new ResponseEntity<String>(HttpStatus.ACCEPTED);
 //    }
-
-//    @RequestMapping(value="/check", method = RequestMethod.POST)
-//    public ModelAndView viewLogin(@Valid @ModelAttribute User user){
-//
-//        ModelAndView modelAndView =new ModelAndView();
-//        modelAndView.setViewName("main");
-//        modelAndView.addObject("user", user);
-//
-//        return modelAndView;
-//    }
-//
-//
-//
-//    @RequestMapping(value="/test", method = RequestMethod.GET)
-//    public String viewTest(){
-//        return "main";
-//    }
 //
 //    @RequestMapping(value="/failed", method = RequestMethod.GET)
 //    public ModelAndView viewFail(){
 //        return new ModelAndView("login-failed", "message", "Login-block");
 //    }
 //
-
-//    private PersonService personService;
-//
-//    @Autowired(required=true)
-//    @Qualifier(value="personService")
-//    public void setPersonService(PersonService ps){
-//        this.personService = ps;
-//    }
 //
 //    @RequestMapping(value = "/persons", method = RequestMethod.GET)
 //    public String mainPage(Model model) {
 //        model.addAttribute("person", new Person());
 //        model.addAttribute("mainPage", this.personService.mainPage());
 //        return "person";
-//    }
-//
-//    //For add and update person both
-//    @RequestMapping(value= "/person/add", method = RequestMethod.POST)
-//    public String addPerson(@ModelAttribute("person") Person p){
-//
-//        if(p.getId() == 0){
-//            //new person, add it
-//            this.personService.addPerson(p);
-//        }else{
-//            //existing person, call update
-//            this.personService.updatePerson(p);
-//        }
-//
-//        return "redirect:/persons";
-//
 //    }
 //
 //    @RequestMapping("/remove/{id}")
@@ -142,7 +133,5 @@ public class CarController {
 //        model.addAttribute("mainPage", this.personService.mainPage());
 //        return "person";
 //    }
-
-
 
 }

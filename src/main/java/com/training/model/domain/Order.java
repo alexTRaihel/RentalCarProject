@@ -12,10 +12,6 @@ public class Order {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "number")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int number;
-
     @Column(name = "data_open")
     private Date dataOpen;
 
@@ -28,11 +24,21 @@ public class Order {
     @Column(name = "info")
     private String info;
 
-    @Column(name = "confirmation")
-    private Byte confirmation;
-
     @Column(name = "passportId")
     private String passportID;
+
+    //@ManyToOne (optional = false, cascade = CascadeType.ALL)
+    @JoinTable(name = "order_status", joinColumns = @JoinColumn(name = "id"))
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    @ManyToOne (optional = true)
+    @JoinColumn(name = "car_id")
+    private Car car;
+
+    @ManyToOne (optional = true)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public int getId() {
         return id;
@@ -40,14 +46,6 @@ public class Order {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
     }
 
     public Date getDataOpen() {
@@ -82,16 +80,36 @@ public class Order {
         this.info = info;
     }
 
-    public Byte getConfirmation() {
-        return confirmation;
-    }
-
-    public void setConfirmation(Byte confirmation) {
-        this.confirmation = confirmation;
-    }
-
     public String getPassportID() {
         return passportID;
+    }
+
+    public void setPassportID(String passportID) {
+        this.passportID = passportID;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -100,7 +118,6 @@ public class Order {
         if (o == null || getClass() != o.getClass()) return false;
         Order that = (Order) o;
         if (id != that.id) return false;
-        if (number != that.number) return false;
         if (dataOpen != null ? !dataOpen.equals(that.dataOpen) : that.dataOpen != null) return false;
         if (dataClose != null ? !dataClose.equals(that.dataClose) : that.dataClose != null) return false;
         if (bill != null ? !bill.equals(that.bill) : that.bill != null) return false;
@@ -110,7 +127,6 @@ public class Order {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + number;
         result = 31 * result + (dataOpen != null ? dataOpen.hashCode() : 0);
         result = 31 * result + (dataClose != null ? dataClose.hashCode() : 0);
         return result;

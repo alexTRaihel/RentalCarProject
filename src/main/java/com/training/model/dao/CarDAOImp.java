@@ -23,13 +23,12 @@ public class CarDAOImp implements CarDAO {
     public Car getCarById(int id) {
         Session session = this.sessionFactory.getCurrentSession();
         List<Car> cars = (List<Car>) session.createQuery("from Car").list();
-        Car car=null;
         for (Car foundCar : cars) {
             if(foundCar.getId()==id){
-                car=foundCar;
+                return foundCar;
             }
         }
-        return car;
+        return null;
     }
 
     @Override
@@ -41,16 +40,19 @@ public class CarDAOImp implements CarDAO {
 
     @Override
     public void addCar(Car car) {
-
+        Session session = this.sessionFactory.getCurrentSession();
+        session.save(car);
     }
 
     @Override
     public void editCar(Car car) {
-
+        Session session = this.sessionFactory.getCurrentSession();
+        session.update(car);
     }
 
     @Override
     public void deleteCar(Car car) {
-
+        Session session = this.sessionFactory.getCurrentSession();
+        session.delete(car);
     }
 }

@@ -25,13 +25,10 @@ public class UserDaoImp implements UserDAO {
         Session session = this.sessionFactory.getCurrentSession();
         Query query = session.createQuery("from User where name=:paramName");
         query.setParameter("paramName", username);
-        if(query.list().isEmpty()) {
-            return null;
-        }
-        else {
-            User users = ((List<User>) query.list()).get(0);
-            return users;
-        }
+        //check
+        List<User> users = (List<User>) query.list();
+
+        return users.stream().findFirst().orElse(null);
     }
 
     @Override

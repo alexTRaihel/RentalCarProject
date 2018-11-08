@@ -58,6 +58,14 @@
         <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory"/>
     </bean>
 
+    <bean id="orderDao" class="com.training.model.dao.OrderDAOImp">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory"/>
+    </bean>
+
+    <bean id="orderService" class="com.training.model.services.OrderServiceImpl">
+        <property name="orderDAO" ref="orderDao"/>
+    </bean>
+
     <bean id="carService" class="com.training.model.services.CarServiceImpl">
         <property name="carDAO" ref="carDao"/>
     </bean>

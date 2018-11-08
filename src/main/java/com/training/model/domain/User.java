@@ -1,6 +1,8 @@
 package com.training.model.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user", schema = "rental_car")
@@ -23,12 +25,18 @@ public class User {
     @Column(name = "enabled")
     private boolean enabled;
 
+    @Column(name = "account")
+    private int account;
+
     @Transient
     private String confirmPassword;
 
-    @ManyToOne (optional = false, cascade = CascadeType.ALL)
+    @ManyToOne (optional = false)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<Order> orders = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -84,5 +92,21 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
+
+    public int getAccount() {
+        return account;
+    }
+
+    public void setAccount(int account) {
+        this.account = account;
     }
 }

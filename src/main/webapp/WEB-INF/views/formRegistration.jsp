@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:import url="parts/header.jsp" />
-<div class="loginContainer">
+<div class="loginContainer my-2">
     <form:form method="POST" modelAttribute="user" action="/registration">
         <div class="form-group">
             <form:label path="username" for="name">Name:</form:label>

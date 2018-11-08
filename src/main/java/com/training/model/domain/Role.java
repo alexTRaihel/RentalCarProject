@@ -1,6 +1,7 @@
 package com.training.model.domain;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -12,8 +13,8 @@ public class Role  {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "role")
-    private Set<User> user;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    private Set<User> user = new HashSet<>();
 
     @Column(name = "roles")
     private String role;

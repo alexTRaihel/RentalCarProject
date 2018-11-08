@@ -9,14 +9,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 
@@ -38,22 +34,21 @@ public class MainController {
     }
 
     @RequestMapping(value = "/main", method = RequestMethod.GET)
-    public String mainPage(Model model, Principal user) {
-        model.addAttribute("user", user);
+    public String mainPage(Model model) {
         return "main";
     }
 
     @RequestMapping(value="/registration", method = RequestMethod.GET)
-    public String regist(Model model){
+    public String registration(Model model){
         model.addAttribute("user", new User());
-        return "regist";
+        return "formRegistration";
     }
 
     @RequestMapping(value= "/registration", method = RequestMethod.POST)
     public String addPerson(@Valid @ModelAttribute("user") User user, BindingResult bindingResult){
         userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors()){
-            return "regist";
+            return "formRegistration";
         }
         userService.addPerson(user);
         securityService.autoLogin(user.getUsername(), user.getPassword());
@@ -66,7 +61,7 @@ public class MainController {
         if (error != null) {
             model.addObject("error", "Invalid username or password!");
         }
-        model.setViewName("login");
+        model.setViewName("formLogin");
         return model;
     }
 
@@ -74,6 +69,25 @@ public class MainController {
     public String users(Model model){
         List<User> users = userService.listUsers();
         model.addAttribute("listUsers", users);
-        return "users";
+        return "listUsers";
+    }
+
+
+    @RequestMapping(value= "/profile/{username}", method = RequestMethod.GET)
+    public String userProfile(@PathVariable("username") String username, Model model){
+
+        if (!(userService.checkAccess(username))){
+            return "redirect:/main";
+        }
+
+        User user = userService.getUserByUsername(username);
+        model.addAttribute("user", user);
+        return "userProfile";
+    }
+
+    @RequestMapping(value= "/profile/{username}", method = RequestMethod.POST)
+    public String changeUserProfile(@PathVariable("username") String username, @ModelAttribute("user") User user, Model model){
+
+        return "userProfile";
     }
 }

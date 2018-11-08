@@ -4,6 +4,8 @@ import org.springframework.security.crypto.codec.Base64;
 
 import javax.persistence.*;
 import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "cars", schema = "rental_car")
@@ -26,6 +28,9 @@ public class Car {
     @Lob
     @Column(name = "picture", columnDefinition = "BLOB")
     private byte[] picture;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "car")
+    private Set<Order> orders = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -65,6 +70,18 @@ public class Car {
 
     public void setPicture(byte[] picture) {
         this.picture = picture;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
+
+    public void setImgUtility(String imgUtility) {
+        this.imgUtility = imgUtility;
     }
 
     @Transient
