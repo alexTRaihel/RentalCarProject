@@ -13,8 +13,8 @@ public class Role  {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-    private Set<User> user = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "role")
+    private Set<User> user = new HashSet<User>();
 
     @Column(name = "roles")
     private String role;

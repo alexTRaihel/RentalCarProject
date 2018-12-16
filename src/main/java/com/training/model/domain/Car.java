@@ -25,12 +25,18 @@ public class Car {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "enabled")
+    private Boolean enabled;
+
     @Lob
     @Column(name = "picture", columnDefinition = "BLOB")
     private byte[] picture;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "car")
-    private Set<Order> orders = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders = new HashSet<Order>();
+
+//    @OneToMany(fetch = FetchType.EAGER, mappedBy = "car_options")
+//    private Set<CarOptions> options = new HashSet<CarOptions>();
 
     public Integer getId() {
         return id;
@@ -80,8 +86,12 @@ public class Car {
         this.orders = orders;
     }
 
-    public void setImgUtility(String imgUtility) {
-        this.imgUtility = imgUtility;
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enables) {
+        this.enabled = enables;
     }
 
     @Transient

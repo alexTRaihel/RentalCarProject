@@ -9,4 +9,5 @@ public interface OrderDAO {
     void saveOrder(Order order);
     List<Order> getOrdersById(int id);
     List<Order> findAllOrders();
+    void updateOrder(Order order);
 }

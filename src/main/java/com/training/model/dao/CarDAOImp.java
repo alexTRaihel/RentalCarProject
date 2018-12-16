@@ -4,9 +4,11 @@ import com.training.model.dao.interfaces.CarDAO;
 import com.training.model.domain.Car;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Repository
@@ -54,5 +56,10 @@ public class CarDAOImp implements CarDAO {
     public void deleteCar(Car car) {
         Session session = this.sessionFactory.getCurrentSession();
         session.delete(car);
+    }
+
+    @Override
+    public Page<Car> getAll(Pageable pageable) {
+        return null;
     }
 }

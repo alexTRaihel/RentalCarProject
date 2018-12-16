@@ -1,11 +1,15 @@
 package com.training.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.training.model.domain.User;
+import com.training.model.services.SecurityServiceImpl;
 import com.training.model.services.interfaces.SecurityService;
 import com.training.model.services.interfaces.UserService;
 import com.training.validator.UserValidator;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,11 +17,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 
 @Controller
 public class MainController {
+
+    private static Logger LOG = Logger.getLogger(SecurityServiceImpl.class);
 
     @Autowired
     private UserValidator userValidator;
@@ -33,7 +40,7 @@ public class MainController {
         this.userService = ps;
     }
 
-    @RequestMapping(value = "/main", method = RequestMethod.GET)
+    @RequestMapping(value = {"/","/main"}, method = RequestMethod.GET)
     public String mainPage(Model model) {
         return "main";
     }
@@ -55,7 +62,7 @@ public class MainController {
         return "redirect:/main";
     }
 
-    @RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
         ModelAndView model = new ModelAndView();
         if (error != null) {
@@ -72,14 +79,12 @@ public class MainController {
         return "listUsers";
     }
 
-
     @RequestMapping(value= "/profile/{username}", method = RequestMethod.GET)
     public String userProfile(@PathVariable("username") String username, Model model){
 
         if (!(userService.checkAccess(username))){
             return "redirect:/main";
         }
-
         User user = userService.getUserByUsername(username);
         model.addAttribute("user", user);
         return "userProfile";
@@ -87,7 +92,44 @@ public class MainController {
 
     @RequestMapping(value= "/profile/{username}", method = RequestMethod.POST)
     public String changeUserProfile(@PathVariable("username") String username, @ModelAttribute("user") User user, Model model){
-
         return "userProfile";
+    }
+
+    @RequestMapping(value= "/admin/user/enabled", method = RequestMethod.POST)
+    public String lockProfile(@RequestParam("name") String name){
+        User user = userService.getUserByUsername(name);
+        if (user!=null){
+            user.setEnabled(!user.isEnabled());
+            userService.updateUser(user);
+        }
+        return "redirect:/profile/"+name;
+    }
+
+    @RequestMapping(value= "/admin/user/topUpAccount", method = RequestMethod.POST)
+    public String addMoney(@RequestParam("name") String name, @RequestParam("count") int count){
+        User user = userService.getUserByUsername(name);
+        if (user!=null){
+            userService.addCount(name, count);
+        }
+        return "redirect:/profile/"+name;
+    }
+
+    @RequestMapping(value = "/admin/user/find", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @ResponseBody
+    public List<String> findUser(@RequestParam("name") String name){
+
+        if (name.isEmpty()){
+           return null;
+        }
+        else {
+            List<String> list = new ArrayList<String>();
+            User user = userService.getUserByUsername(name);
+            if (user!=null) {
+                list.add(user.getUsername());
+                list.add(user.getEmail());
+                list.add(user.getId().toString());
+            }
+            return list;
+        }
     }
 }

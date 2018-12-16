@@ -11,4 +11,6 @@ public interface UserService  {
     List<User> listUsers();
     void addPerson(User p);
     boolean checkAccess(String username);
+    void updateUser(User user);
+    boolean addCount(String username, int count);
 }

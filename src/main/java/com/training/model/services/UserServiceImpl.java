@@ -4,7 +4,6 @@ import com.training.model.dao.interfaces.RolesDAO;
 import com.training.model.dao.interfaces.UserDAO;
 import com.training.model.domain.User;
 import com.training.model.services.interfaces.UserService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public void addPerson(User user) {
         user.setEnabled(true);
         user.setRole(rolesDAO.getByID(1));
-        userDaoImp.addPerson(user);
+        userDaoImp.addUser(user);
     }
 
     public boolean checkAccess(String username){
@@ -56,5 +55,19 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         else return false;
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userDaoImp.updateUser(user);
+    }
+
+    @Override
+    @Transactional
+    public boolean addCount(String username, int count) {
+        User user = getUserByUsername(username);
+        user.setAccount(user.getAccount()+count);
+        updateUser(user);
+        return true;
     }
 }

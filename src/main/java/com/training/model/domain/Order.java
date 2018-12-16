@@ -1,6 +1,8 @@
 package com.training.model.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
 import java.sql.Date;
 
 @Entity
@@ -12,20 +14,22 @@ public class Order {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
+    @NotNull(message = "This field can not be null")
     @Column(name = "data_open")
     private Date dataOpen;
 
-    @Column(name = "data_close")
+    @NotNull(message = "This field can not be null")
+    @Column(name = "data_close", nullable = false)
     private Date dataClose;
 
     @Column(name = "bill")
     private Integer bill;
 
-    @Column(name = "info")
-    private String info;
+    @Column(name = "message")
+    private String message;
 
-    @Column(name = "passportId")
-    private String passportID;
+    @Column(name = "passport")
+    private String passport;
 
     //@ManyToOne (optional = false, cascade = CascadeType.ALL)
     @JoinTable(name = "order_status", joinColumns = @JoinColumn(name = "id"))
@@ -72,20 +76,20 @@ public class Order {
         this.bill = bill;
     }
 
-    public String getInfo() {
-        return info;
+    public String getMessage() {
+        return message;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setMessage(String info) {
+        this.message = info;
     }
 
-    public String getPassportID() {
-        return passportID;
+    public String getPassport() {
+        return passport;
     }
 
-    public void setPassportID(String passportID) {
-        this.passportID = passportID;
+    public void setPassport(String passport) {
+        this.passport = passport;
     }
 
     public OrderStatus getStatus() {

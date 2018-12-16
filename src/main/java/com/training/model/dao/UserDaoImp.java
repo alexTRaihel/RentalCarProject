@@ -32,18 +32,19 @@ public class UserDaoImp implements UserDAO {
     }
 
     @Override
-    public void addPerson(User user) {
+    public void addUser(User user) {
         Session session = this.sessionFactory.getCurrentSession();
         session.save(user);
     }
 
     @Override
-    public void updateProfile(User user, String password, String email) {
-
+    public void updateUser(User user) {
+        Session session = this.sessionFactory.getCurrentSession();
+        session.update(user);
     }
 
     @Override
-    public void removePerson(User user) {
+    public void removeUser(User user) {
         Session session = this.sessionFactory.getCurrentSession();
         session.delete(user);
     }
@@ -54,5 +55,10 @@ public class UserDaoImp implements UserDAO {
         Session session = this.sessionFactory.getCurrentSession();
         List<User> usersList = session.createQuery("from User").list();
         return usersList;
+    }
+
+    @Override
+    public void transfer(User userFrom, User userTo, int amount) {
+
     }
 }

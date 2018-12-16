@@ -11,7 +11,8 @@ public interface UserDAO   {
 
    User getUserByUsername(String username);
    List<User> listUsers();
-   void addPerson(User p);
-   void updateProfile(User user, String password, String email);
-   void removePerson(User user);
+   void addUser(User p);
+   void updateUser(User user);
+   void removeUser(User user);
+   void transfer(User userFrom, User userTo, int amount);
 }

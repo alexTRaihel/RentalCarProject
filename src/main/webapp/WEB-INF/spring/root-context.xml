@@ -7,4 +7,5 @@
 	<import resource="servlet-context.xml" />
 	<import resource="servlet-context.xml" />
 	<import resource="hibernate-context.xml" />
+
 </beans>

@@ -41,4 +41,10 @@ public class OrderDAOImp implements OrderDAO {
         Session session = this.sessionFactory.getCurrentSession();
         return (List<Order>)session.createQuery("from Order").list();
     }
+
+    @Override
+    public void updateOrder(Order order) {
+        Session session = this.sessionFactory.getCurrentSession();
+        session.update(order);
+    }
 }

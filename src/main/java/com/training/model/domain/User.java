@@ -26,7 +26,7 @@ public class User {
     private boolean enabled;
 
     @Column(name = "account")
-    private int account;
+    private Integer account;
 
     @Transient
     private String confirmPassword;
@@ -36,7 +36,7 @@ public class User {
     private Role role;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    private Set<Order> orders = new HashSet<>();
+    private Set<Order> orders = new HashSet<Order>();
 
     public Integer getId() {
         return id;
@@ -102,11 +102,11 @@ public class User {
         this.orders = orders;
     }
 
-    public int getAccount() {
+    public Integer getAccount() {
         return account;
     }
 
-    public void setAccount(int account) {
+    public void setAccount(Integer account) {
         this.account = account;
     }
 }

@@ -10,11 +10,23 @@
     <link href="<c:url value="/resources/css/bootstrap-reboot.css" />" rel="stylesheet">
     <link href="<c:url value="/resources/js/bootstrap.js" />" rel="script">
     <link href="<c:url value="/resources/js/bootstrap.bundle.js" />" rel="script">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </head>
 <style>
-    body{
+    body {
         max-width: 60%;
+    }
+    section{
+        display: flex;
         margin: auto;
+        margin-bottom: 20px;
+        min-height: 80%;
+    }
+    footer{
+        background-color: #f8f9fa;
     }
     .error {
         color: red;
@@ -24,7 +36,7 @@
         margin: auto;
     }
 </style>
-<body>
+<body class="m-auto">
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light nav-pills">
         <a class="navbar-brand" href="/main">Main</a>
@@ -33,39 +45,38 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/cars">Cars<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#/agreement">Agreement<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile/${pageContext.request.userPrincipal.name}">Profile</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cars">Cars<span class="sr-only">(current)</span></a>
+                    </li>
+                <c:if test="${pageContext.request.userPrincipal.name != null}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile/${pageContext.request.userPrincipal.name}">Profile</a>
+                    </li>
+                </c:if>
                 <security:authorize access="hasRole('ROLE_ADMIN')">
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="/admin/users">Users</a>
+                        <a class="nav-link" href="/admin/users">Users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="/admin/orders">Orders</a>
+                        <a class="nav-link" href="/admin/orders">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="/admin/cars">Cars</a>
+                        <a class="nav-link" href="/admin/cars">Cars</a>
                     </li>
                 </security:authorize>
             </ul>
             <c:if test="${empty pageContext.request.userPrincipal.name}">
                 <a href="/registration">
-                    <button class="btn btn-outline-success my-2 my-sm-0">Registration</button>
+                    <button class="btn btn-outline-success mx-2 my-2 my-sm-0">Registration</button>
                 </a>
                 <a href="/login">
-                    <button class="btn btn-outline-success my-2 my-sm-0">Sign in</button>
+                    <button class="btn btn-outline-success mx-2 my-sm-0">Sign in</button>
                 </a>
             </c:if>
             <c:if test="${pageContext.request.userPrincipal.name != null}">
-                <li class="nav-item">
+                <div class="nav-item mx-2">
                         ${pageContext.request.userPrincipal.name}
-                </li>
+                </div>
                 <a href="/j_spring_security_logout">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign out</button>
                 </a>
@@ -73,3 +84,13 @@
         </div>
     </nav>
 </header>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.navbar-nav .nav-item').click(function(){
+            $('.navbar-nav .nav-item').removeClass('active');
+            $(this).addClass('active');
+        })
+    });
+</script>
+

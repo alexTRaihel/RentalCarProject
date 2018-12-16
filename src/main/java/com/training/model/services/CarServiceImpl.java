@@ -3,6 +3,8 @@ package com.training.model.services;
 import com.training.model.dao.interfaces.CarDAO;
 import com.training.model.domain.Car;
 import com.training.model.services.interfaces.CarService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addCar(Car car) {
+        car.setEnabled(true);
         carDAO.addCar(car);
     }
 
@@ -39,5 +42,10 @@ public class CarServiceImpl implements CarService {
     @Override
     public void deleteCar(Car car) {
         carDAO.deleteCar(car);
+    }
+
+    @Override
+    public Page<Car> getAll(Pageable pageable) {
+        return null;
     }
 }
