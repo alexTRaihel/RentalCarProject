@@ -4,7 +4,7 @@
 
 <c:import url="parts/header.jsp" />
 <section>
-    <div class="mx-auto">
+    <div class="mx-auto w-75">
         <div class="container">
             <div class="row">
                 <div class="col-md-2">

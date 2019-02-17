@@ -8,6 +8,7 @@ import com.training.model.services.interfaces.UserService;
 import com.training.validator.FormOderValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -36,14 +38,6 @@ public class CarController {
 
     @Autowired
     private UserService userService;
-
-    @RequestMapping(value = "/cars", method = RequestMethod.GET)
-    public String carsPage(Model model) {
-        List<Car> cars = carService.listCars();
-        cars = cars.stream().filter(car -> car.getEnabled().equals(true)).collect(Collectors.toList());
-        model.addAttribute("listCars", cars);
-        return "listCars";
-    }
 
     @RequestMapping(value = "/admin/add/car", method = RequestMethod.GET)
     public String addCar(Model model) {
@@ -112,11 +106,30 @@ public class CarController {
         return "allCars";
     }
 
-//    @RequestMapping(value = "/cars", method = RequestMethod.GET)
-//    public String pageable(Model model, @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC ) Pageable pageable) {
-//        Page<Car> cars = carService.getAll(pageable);
-//        model.addAttribute("listCars", cars);
-//        return "listCars";
-//    }
+    @RequestMapping(value = "/cars", method = RequestMethod.GET)
+    public String pageable(Model model, HttpServletRequest servletRequest, @RequestParam(required = false) Integer page) {
 
+        List<Car> cars = carService.listCars();
+
+        cars = cars.stream().filter(car -> car.getEnabled().equals(true)).collect(Collectors.toList());
+
+        PagedListHolder<Car> pagedListHolder = new PagedListHolder<Car>(cars);
+        pagedListHolder.setPageSize(6);
+        model.addAttribute("maxPages", pagedListHolder.getPageCount());
+
+        if (page == null || page<1 || page > pagedListHolder.getPageCount()){
+            page = 1;
+        }
+        model.addAttribute("page", page);
+
+        if (page == null || page<1 || page > pagedListHolder.getPageCount()){
+            pagedListHolder.setPage(0);
+            model.addAttribute("listCars", pagedListHolder.getPageList());
+        }
+        if (page <= pagedListHolder.getPageCount()){
+            pagedListHolder.setPage(page-1);
+            model.addAttribute("listCars", pagedListHolder.getPageList());
+        }
+        return "listCars";
+    }
 }

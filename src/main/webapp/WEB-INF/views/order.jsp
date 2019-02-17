@@ -5,8 +5,8 @@
 <%@ taglib prefix="input" uri="http://www.springframework.org/tags/form" %>
 <c:import url="parts/header.jsp" />
 <section>
-    <div class="container mx-auto">
-        <div class="alert m-2 alert-secondary" role="alert">
+    <div class="container mx-auto w-50" style="min-height: 700px">
+        <div class="alert my-2 alert-secondary" role="alert">
             ${order.status}
         </div>
         <table class="table table-bordered">
@@ -61,10 +61,24 @@
         </table>
         <div class="container">
             <c:if test="${order.status == 'NEW'}">
+                <div style="display: none;" id="close_form">
+                    <div class="form-group mt-3">
+                        <form:form action="/reject" method="POST" modelAttribute="order">
+                            <div class="form-group">
+                                <input name="id" type="hidden" value="${order.id}"/>
+                                <form:label path="message" for="message">Message</form:label>
+                                <form:input path="message" type="text" class="form-control" placeholder="Message"/>
+                            </div>
+                            <div class="form-group">
+                                <form:button type="submit" class="btn btn-primary">Reject</form:button>
+                            </div>
+                        </form:form>
+                    </div>
+                </div>
                 <div class="d-inline">
-                    <button class="btn btn-primary mt-3" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                        Reject
-                    </button>
+                    <div style="display: flex; justify-content: center;" class="mb-3">
+                        <button class="btn btn-primary button_show">Reject</button>
+                    </div>
                     <div class="form-group">
                         <form:form action="/approve" method="POST" modelAttribute="order">
                             <input name="id" type="hidden" value="${order.id}"/>
@@ -72,41 +86,24 @@
                         </form:form>
                     </div>
                 </div>
-                <div class="collapse" id="collapseExample">
-                    <div class="form-group mt-3">
-                        <form:form action="/reject" method="POST" modelAttribute="order">
-                        <div class="form-group">
-                            <input name="id" type="hidden" value="${order.id}"/>
-                            <form:label path="message" for="message">Message</form:label>
-                            <form:input path="message" type="text" class="form-control" placeholder="Message"/>
-                        </div>
-                        <div class="form-group">
-                            <form:button type="submit" class="btn btn-primary">Reject</form:button>
-                        </div>
-                        </form:form>
-                    </div>
-                </div>
             </c:if>
             <c:if test="${order.status == 'CURRENT'}">
-                <button class="btn btn-primary mt-3" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    Close
-                </button>
-                <div class="collapse" id="collapseExample">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">
-                            Default checkbox
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="exampleInputPassword3" placeholder="Count">
+                <div style="display: flex; justify-content: center;" class="mb-3">
+                    <button class="btn btn-primary button_show">Close</button>
+                </div>
+                <div style="display: none;" id="close_form">
+                    <div class="form-group w-50 m-auto">
+                        <label for="inputAdditionalAccount">Additional account</label>
+                        <input type="number" class="form-control" id="inputAdditionalAccount" placeholder="Additional account">
                     </div>
                     <div class="form-group mt-3">
                         <div class="form-group">
                             <label for="messageBeforeClose">Message</label>
-                            <input type="text" class="form-control" id="messageBeforeClose" placeholder="Message"/>
+                            <textarea class="form-control" id="messageBeforeClose">
+
+                            </textarea>
                         </div>
-                        <div class="form-group">
+                        <div style="display: flex; justify-content: center;">
                             <button type="submit" class="btn btn-primary" onclick="closed()">Close</button>
                         </div>
                     </div>
@@ -129,5 +126,9 @@
             }
         });
     }
+   $(".button_show").click(function() {
+       $("#close_form").toggle();
+       $(".button_show").hide();
+   });
 </script>
 

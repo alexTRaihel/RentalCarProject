@@ -3,8 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <c:import url="parts/header.jsp" />
-<section>
-    <div class="mx-auto mt-2">
+    <div class="mx-auto mt-2 w-50">
         <div class="container">
             <div class="text-center">
                 <h3 class="m-2">List of cars</h3>
@@ -33,5 +32,4 @@
             </table>
         </c:if>
     </div>
-</section>
 <c:import url="parts/footer.jsp" />

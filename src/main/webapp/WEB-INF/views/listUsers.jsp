@@ -2,8 +2,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:import url="parts/header.jsp" />
-<section>
-    <div class="mx-auto">
+<div class="listUsers">
+    <div class="mx-auto w-75 mt-3">
         <div class="container m-auto">
             <div class="container">
                 <div class="row no-gutters">
@@ -14,14 +14,14 @@
                         <div class="form-inline m-2">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="inputNameForSearch" placeholder="Find profile">
-                                <button onclick="find()" class="btn btn-primary">Search</button>
+                                <button onclick="find()" class="btn btn-primary mx-1">Search</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <c:if test="${!empty listUsers}">
-                <table class="table table-bordered m-2 flex-grow-1">
+                <table id="user_table" class="table table-bordered m-2 flex-grow-1">
                     <tr>
                         <th>Person ID</th>
                         <th>Username</th>
@@ -30,7 +30,7 @@
                         <th>Role</th>
                     </tr>
                     <c:forEach items="${listUsers}" var="user">
-                        <tr>
+                        <tr >
                             <td>${user.id}</td>
                             <td>
                                 <a href="<c:url value='/profile/${user.username}'/>" >
@@ -38,23 +38,15 @@
                                 </a>
                             </td>
                             <td>${user.account}</td>
-                            <td>
-                                <a href="#" >
-                                        ${user.enabled}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="#" >
-                                        ${user.role.role}
-                                </a>
-                            </td>
+                            <td>${user.enabled}</td>
+                            <td>${user.role.role}</td>
                         </tr>
                     </c:forEach>
                 </table>
             </c:if>
         </div>
     </div>
-</section>
+</div>
 <c:import url="parts/footer.jsp" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -70,12 +62,25 @@
         });
     }
     function display(data) {
-        var json = "<h4>Ajax Response</h4><pre>"
-            + JSON.stringify(data, null, 4) + "</pre>";
-        $('#userFrom').html(json);
-    }
-    function showUsers(data) {
-        $('#table').clearAll();
-        $('#table').append(data);
+        var table = $("#user_table");
+        $("#user_table tr").remove();
+        var row = '<tr>';
+        row += '<th>Person ID</th>';
+        row += '<th>Username</th>';
+        row += '<th>Account</th>';
+        row += '<th>Enabled</th>';
+        row += '<th>Role</th>';
+        row += '</tr>';
+        table.append(row);
+        $.each( data, function( index, user){
+            var date_row = '<tr>';
+            date_row += '<td>'+user.id+'</td>';
+            date_row += '<td><a href=/profile/'+user.username+'>'+user.username+'</a></td>';
+            date_row += '<td>'+user.account+'</td>';
+            date_row += '<td>'+user.enabled+'</td>';
+            date_row += '<td>'+user.role+'</td>';
+            date_row += '</tr>';
+            table.append(date_row);
+        });
     }
 </script>

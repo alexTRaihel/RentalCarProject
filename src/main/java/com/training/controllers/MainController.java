@@ -1,6 +1,6 @@
 package com.training.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.training.model.domain.User;
 import com.training.model.services.SecurityServiceImpl;
 import com.training.model.services.interfaces.SecurityService;
@@ -18,13 +18,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
 public class MainController {
 
     private static Logger LOG = Logger.getLogger(SecurityServiceImpl.class);
+    private final Gson GSON = new Gson();
 
     @Autowired
     private UserValidator userValidator;
@@ -116,20 +119,24 @@ public class MainController {
 
     @RequestMapping(value = "/admin/user/find", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @ResponseBody
-    public List<String> findUser(@RequestParam("name") String name){
-
+    public String findUser(@RequestParam("name") String name){
         if (name.isEmpty()){
            return null;
         }
         else {
-            List<String> list = new ArrayList<String>();
-            User user = userService.getUserByUsername(name);
-            if (user!=null) {
-                list.add(user.getUsername());
-                list.add(user.getEmail());
-                list.add(user.getId().toString());
+            List<Map> listResult = new ArrayList<>();
+            List<User> users = userService.getUsersByName(name);
+            for (User user : users) {
+                Map<String, String> map = new HashMap<>();
+                map.put("id",user.getId().toString());
+                map.put("username", user.getUsername());
+                map.put("account", user.getAccount().toString());
+                String enabled = user.isEnabled()? "true" : "false";
+                map.put("enabled", enabled);
+                map.put("role", user.getRole().getRole());
+                listResult.add(map);
             }
-            return list;
+            return GSON.toJson(listResult);
         }
     }
 }

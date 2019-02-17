@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class RentController {
@@ -83,7 +85,7 @@ public class RentController {
 
     @RequestMapping(value = "/rent/{id}", method = RequestMethod.GET)
     public ModelAndView rentalCar(@PathVariable("id") int id) {
-        //Change this code
+        //To do change this code
         Order order = new Order();
         Car car = carService.getCarById(id);
         ModelAndView model = new ModelAndView();
@@ -93,11 +95,12 @@ public class RentController {
         return model;
     }
 
+//    @RequestParam("selected") List<String> values,
+
     @RequestMapping(value= "/rent/{id}", method = RequestMethod.POST)
     public String rentalPage(@PathVariable("id") int id,
                              @Valid @ModelAttribute("order") Order order,
                              BindingResult bindingResult,
-                             @RequestParam("selected") List<String> values,
                              Model model){
         formOderValidator.validate(order,bindingResult);
         Car car = carService.getCarById(id);
@@ -105,7 +108,7 @@ public class RentController {
             model.addAttribute("car", car);
             return "formOrder";
         }
-        values.size();
+//        values.size();
         order.setCar(car);
         order.setBill(orderService.calcRentalPrice(order, car.getPrice()));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -3,11 +3,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:import url="parts/header.jsp" />
 <section>
-        <div class="container m-auto">
+        <div class="container mt-2">
             <c:if test="${car.picture !=null}">
                 <div class="row mx-auto justify-content-center">
                     <div class="m-auto">
-                        <div class="col-sm w-75">
+                        <div class="col-sm w-75 m-auto mt-3">
                             <img src="data:image/jpeg;base64,${car.imgUtility}" class="img-thumbnail m-auto">
                         </div>
                     </div>

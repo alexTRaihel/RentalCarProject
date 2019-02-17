@@ -3,11 +3,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <c:import url="parts/header.jsp" />
-<section>
-    <div class="loginContainer mx-auto">
+<section style="min-height: 700px; margin-top: 20px">
+    <div class="loginContainer mx-auto w-50">
         <form:form method="POST" modelAttribute="user" action="/registration">
             <div class="form-group">
-                <form:label path="username" for="name">Name:</form:label>
+                <label for="firstName">First Name:</label>
+                <input class="form-control" id="firstName" placeholder="Enter Name"/>
+            </div>
+            <div class="form-group">
+                <label for="lastName">last Name:</label>
+                <input class="form-control" id="lastName" placeholder="Enter Name"/>
+            </div>
+            <div class="form-group">
+                <form:label path="username" for="name">Username:</form:label>
                 <form:input path="username" class="form-control" id="name" placeholder="Enter Name"/>
                 <form:errors path="username" class="error"/>
             </div>

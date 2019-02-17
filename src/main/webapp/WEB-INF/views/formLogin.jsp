@@ -3,8 +3,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <c:import url="parts/header.jsp" />
-<section>
-    <div class="loginContainer mx-auto">
+<section style="min-height: 700px;">
+    <div class="loginContainer mx-auto mt-3" style="width: 200px">
         <c:if test="${not empty error}">
             <div class="alert alert-danger m-2" role="alert">
                     ${error}

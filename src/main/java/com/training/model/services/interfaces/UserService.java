@@ -13,4 +13,5 @@ public interface UserService  {
     boolean checkAccess(String username);
     void updateUser(User user);
     boolean addCount(String username, int count);
+    List<User> getUsersByName(String username);
 }

@@ -1,5 +1,5 @@
 </body>
-<footer id="footer" class="footer navbar-fixed-bottom co">
+<footer id="footer" class="footer navbar-fixed-bottom co pt-3">
     <div class="container">
         <div class="row">
             <div class="col-md-5">

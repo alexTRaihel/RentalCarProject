@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -50,7 +51,6 @@ public class UserServiceImpl implements UserService {
     public boolean checkAccess(String username){
         UserDetails userDetails =
                 (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         if(userDetails.getUsername().equals(username)||(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))){
             return true;
         }
@@ -69,5 +69,12 @@ public class UserServiceImpl implements UserService {
         user.setAccount(user.getAccount()+count);
         updateUser(user);
         return true;
+    }
+
+    @Override
+    public List<User> getUsersByName(String username) {
+        List<User> users = userDaoImp.listUsers();
+        users = users.stream().filter(user -> user.getUsername().startsWith(username)).collect(Collectors.toList());
+        return users;
     }
 }

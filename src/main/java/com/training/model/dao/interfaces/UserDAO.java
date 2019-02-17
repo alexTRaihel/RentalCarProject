@@ -6,9 +6,6 @@ import java.util.List;
 
 public interface UserDAO   {
 
-//   @Query("select b from user b where b.name = :name")
-//   User getUserByName(@Param("name") String name);
-
    User getUserByUsername(String username);
    List<User> listUsers();
    void addUser(User p);
